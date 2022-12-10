@@ -135,7 +135,8 @@ p.num-percent {
   margin: 0;
 }
 
-.book-update button {
+.book-update button,
+.btn {
   background-color: #36b37e;
   color: white;
   border: none;

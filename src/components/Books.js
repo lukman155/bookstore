@@ -7,9 +7,9 @@ const Books = () => (
   <>
     <NavBar />
     <div className="books-con">
-      <Book />
-      <Book />
-      <Book />
+      <Book title="book title" author="author name" />
+      <Book title="tired" author="dev" />
+      <Book title="life" author="me" />
       <span className="horizontal-line" />
       <Form />
     </div>

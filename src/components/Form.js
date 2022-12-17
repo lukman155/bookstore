@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addBookAction } from '../redux/books/books';
+import { addBookAction, addBook } from '../redux/books/books';
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -20,10 +20,13 @@ const Form = () => {
     e.preventDefault();
     const data = {
       ...book,
+      category: 'uncategorized',
       id: Date.now().toString(),
     };
-    if (book.title.length > 0 && book.title.length > 0) {
-      dispatch(addBookAction(data));
+    if (book.title.length > 0 && book.author.length > 0) {
+      dispatch(addBookAction(data)).then(() => {
+        dispatch(addBook(data));
+      });
     }
     setBook({
       title: '',

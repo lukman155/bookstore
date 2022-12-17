@@ -1,46 +1,77 @@
-const ADD_BOOK = 'bookstore/books/ADD_BOOK';
-const REMOVE_BOOK = 'bookstore/books/REMOVE_BOOK';
+/* eslint-disable no-param-reassign */
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const initialState = [
-  {
-    id: '1',
-    title: 'The Hunger Games',
-    category: 'Action',
-    author: 'Suzanne Collins',
-  },
-  {
-    id: '2',
-    title: 'Dune',
-    category: 'Sci-Fi',
-    author: 'Frank Herbert',
-  },
-  {
-    id: '3',
-    title: 'Capital in the Twenty-First Century',
-    category: 'Economy',
-    author: 'Suzanne Collins',
-  },
-];
+const ADD_BOOK = 'books/addBook';
+const REMOVE_BOOK = 'books/removeBook';
+const GET_BOOKS = 'books/getBooks';
 
-const booksReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_BOOK:
-      return [...state, action.payload];
-    case REMOVE_BOOK:
-      return state.filter((book) => book.id !== action.payload);
-    default:
-      return state;
-  }
-};
+const URL = 'https://us-central1-bookstore-api-e63c8.cloudfunctions.net/bookstoreApi/apps/9jEyUOJaAsYSP9nfZYrl/books';
 
-export const addBookAction = (book) => ({
-  type: ADD_BOOK,
-  payload: book,
+export const removeBookAction = createAsyncThunk(REMOVE_BOOK, async (data) => {
+  const response = await fetch(`${URL}/${data.item_id}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
 });
 
-export const removeBookAction = (id) => ({
-  type: REMOVE_BOOK,
-  payload: id,
+export const getBooksAction = createAsyncThunk(GET_BOOKS, async () => {
+  const response = await fetch(URL);
+  const data = await response.json();
+  return data;
 });
 
-export default booksReducer;
+export const addBookAction = createAsyncThunk(ADD_BOOK, async (data) => {
+  const response = await fetch(URL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+});
+
+const bookSlice = createSlice({
+  name: 'books',
+  initialState: {
+    books: [],
+    status: null,
+  },
+  reducers: {
+    addBook: (state, action) => {
+      const data = { ...action.payload };
+      state.books.push(data);
+    },
+    removeBook: (state, action) => {
+      state.books = state.books.filter(
+        (book) => book.item_id !== action.payload.item_id,
+      );
+    },
+  },
+
+  extraReducers: {
+    [getBooksAction.pending]: (state) => {
+      state.status = 'loading';
+    },
+    [getBooksAction.fulfilled]: (state, action) => {
+      state.status = 'success';
+      const books = Object.keys(action.payload).map((key) => ({
+        ...action.payload[key][0],
+        item_id: key,
+      }));
+      state.books = books;
+    },
+    [getBooksAction.rejected]: (state) => {
+      state.status = 'failed';
+    },
+  },
+});
+
+export const { addBook, removeBook } = bookSlice.actions;
+export default bookSlice.reducer;

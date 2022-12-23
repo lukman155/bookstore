@@ -2,20 +2,17 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Form from './Form';
 import Book from './Book';
+import { getBooks } from '../redux/books/books';
 import NavBar from './NavBar';
-import { getBooksAction } from '../redux/books/books';
 
 const Books = () => {
-  const { books, status } = useSelector((state) => state.book);
+  const books = useSelector((state) => state.book.books);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(getBooksAction());
-  }, [dispatch]);
-
-  if (status === 'loading') {
-    return <h1>Loading...</h1>;
-  }
+    dispatch(getBooks());
+  },
+  // eslint-disable-next-line
+  []);
 
   return (
     <>
@@ -23,10 +20,10 @@ const Books = () => {
       <div className="books-con">
         {(books).map((book) => (
           <Book
-            key={book.id}
             title={book.title}
+            id={book.item_id}
             author={book.author}
-            id={book.id}
+            key={book.item_id}
           />
         ))}
         <span className="horizontal-line" />

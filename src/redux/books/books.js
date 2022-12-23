@@ -1,54 +1,49 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const ADD_BOOK = 'books/addBook';
-const REMOVE_BOOK = 'books/removeBook';
-const GET_BOOKS = 'books/getBooks';
+const Url = 'https://us-central1-bookstore-api-e63c8.cloudfunctions.net/bookstoreApi/apps/8dmspuqHVBlGIGuvvRwv/books';
 
-const URL = 'https://us-central1-bookstore-api-e63c8.cloudfunctions.net/bookstoreApi/apps/9jEyUOJaAsYSP9nfZYrl/books';
+const initialState = { books: [] };
 
-export const removeBookAction = createAsyncThunk(REMOVE_BOOK, async (data) => {
-  const response = await fetch(`${URL}/${data.item_id}`, {
-    method: 'DELETE',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-  return response.json();
-});
-
-export const getBooksAction = createAsyncThunk(GET_BOOKS, async () => {
-  const response = await fetch(URL);
-  const data = await response.json();
-  return data;
-});
-
-export const addBookAction = createAsyncThunk(ADD_BOOK, async (data) => {
-  const response = await fetch(URL, {
+export const addBooks = createAsyncThunk('books/addBooks', async (bookData) => {
+  const response = await fetch(Url, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(bookData),
   });
   return response.json();
 });
 
+export const deleteBooks = createAsyncThunk('books/removeBooks', async (bookData) => {
+  const response = await fetch(`${Url}/${bookData.item_id}`, {
+    method: 'DELETE',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(bookData),
+  });
+  return response.json();
+});
+
+export const getBooks = createAsyncThunk('books/getBooks', async () => {
+  const response = await fetch(Url);
+  const data = await response.json();
+  return data;
+});
+
 const bookSlice = createSlice({
   name: 'books',
-  initialState: {
-    books: [],
-    status: null,
-  },
+  initialState,
   reducers: {
-    addBook: (state, action) => {
+    addBookOne: (state, action) => {
       const data = { ...action.payload };
       state.books.push(data);
     },
-    removeBook: (state, action) => {
+    deleteBookOne: (state, action) => {
       state.books = state.books.filter(
         (book) => book.item_id !== action.payload.item_id,
       );
@@ -56,22 +51,14 @@ const bookSlice = createSlice({
   },
 
   extraReducers: {
-    [getBooksAction.pending]: (state) => {
-      state.status = 'loading';
-    },
-    [getBooksAction.fulfilled]: (state, action) => {
-      state.status = 'success';
+    [getBooks.fulfilled]: (state, action) => {
       const books = Object.keys(action.payload).map((key) => ({
         ...action.payload[key][0],
         item_id: key,
       }));
       state.books = books;
     },
-    [getBooksAction.rejected]: (state) => {
-      state.status = 'failed';
-    },
   },
 });
-
-export const { addBook, removeBook } = bookSlice.actions;
+export const { addBookOne, deleteBookOne } = bookSlice.actions;
 export default bookSlice.reducer;

@@ -31,7 +31,7 @@ const Book = ({ title, author, id }) => {
         </div>
         <div className="prog-con">
           <div className="book-progress">
-            <div className="c100 p50 small green">
+            <div className="c100 p50 small blue">
               <div className="slice">
                 <div className="bar" />
                 <div className="fill" />

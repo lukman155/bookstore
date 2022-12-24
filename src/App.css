@@ -12,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: white;
-  color: #0290FF;
+  color: #0290ff;
   padding: 1rem 4rem;
   border-radius: 3rem 3rem 0 0;
 }
@@ -33,11 +33,11 @@ nav {
 
 a {
   text-decoration: none;
-  color: #0290FF;
+  color: #0290ff;
 }
 
 a:hover {
-  color: #0290FF;
+  color: #0290ff;
 }
 
 .books-con {
@@ -69,7 +69,7 @@ a:hover {
 }
 
 .grey {
-  color:rgb(85, 85, 85);
+  color: rgb(85, 85, 85);
 }
 
 .prog-con {
@@ -79,7 +79,7 @@ a:hover {
 
 button {
   background: none;
-  color: #0290FF;
+  color: #0290ff;
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
@@ -141,7 +141,7 @@ p.num-percent {
 
 .book-update button,
 .btn {
-  background-color: #0290FF;
+  background-color: #0290ff;
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -179,7 +179,7 @@ p.num-percent {
 }
 
 .add-book-form button {
-  background-color: #0290FF;
+  background-color: #0290ff;
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -190,7 +190,7 @@ p.num-percent {
 }
 
 .book-info > p:last-of-type {
-  color: #0290FF;
+  color: #0290ff;
   padding-bottom: 2rem;
 }
 
